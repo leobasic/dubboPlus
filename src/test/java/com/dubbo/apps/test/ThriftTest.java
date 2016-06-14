@@ -88,7 +88,7 @@ public class ThriftTest {
 					        SharedService.Iface ssi = referenceConfig.get();
 					        
 					        try {
-								System.out.println(Thread.currentThread().getName()+" >> "+ssi.getStruct(1, new People(2,"名字",99,86475.387567)));
+								System.out.println(url.toString()+" \n "+ssi.getStruct(1, new People(2,url.toString(),99,86475.387567)));
 							} catch (InvalidOperationException e) {
 							} catch (TException e) {
 							}

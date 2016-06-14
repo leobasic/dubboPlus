@@ -69,8 +69,19 @@ public abstract class AbstractServiceConfig extends AbstractInterfaceConfig {
 
     // 是否注册
     private Boolean                register;
+    
+    private String dubboplus_version = "1.0.0";
+    
 
-    public String getVersion() {
+    public String getDubboplus_version() {
+		return dubboplus_version;
+	}
+
+	public void setDubboplus_version(String dubboplus_version) {
+		this.dubboplus_version = dubboplus_version;
+	}
+
+	public String getVersion() {
         return version;
     }
 

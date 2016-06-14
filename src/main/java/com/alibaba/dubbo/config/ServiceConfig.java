@@ -63,19 +63,6 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private static final Map<String, Integer> RANDOM_PORT_MAP = new HashMap<String, Integer>();
 
-    /**
-     * 增加对thrift原生协议的支持调用
-     */
-    private boolean thrift_native = false;
-    
-    public boolean isThrift_native() {
-		return thrift_native;
-	}
-
-	public void setThrift_native(boolean thrift_native) {
-		this.thrift_native = thrift_native;
-	}
-
 	// 接口类型
     private String              interfaceName;
 

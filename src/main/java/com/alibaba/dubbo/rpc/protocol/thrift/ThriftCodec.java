@@ -126,10 +126,6 @@ public class ThriftCodec implements Codec2 {
 
     public Object decode( Channel channel, ChannelBuffer buffer ) throws IOException {
 
-    	//原生thrift调用,从url提取isNative和接口方法（注意：只能配置一个service服务）
-    	boolean isNative = Boolean.valueOf(channel.getUrl().getParameter("thrift_native"));
-    	String serviceInterface = channel.getUrl().getServiceInterface();
-    	
         int available = buffer.readableBytes();
 
         if ( available < MESSAGE_SHORTEST_LENGTH ) {
@@ -144,9 +140,6 @@ public class ThriftCodec implements Codec2 {
 
             TBinaryProtocol protocol = new TBinaryProtocol( transport );
 
-            //原生thrift报文，没有这些header信息
-            if (!isNative)
-            {
             	   short magic;
                    int messageLength;
 
@@ -180,15 +173,14 @@ public class ThriftCodec implements Codec2 {
                    }
 
                    if ( available < messageLength ) { return  DecodeResult.NEED_MORE_INPUT; }
-            }
 
-            return decode( protocol ,isNative ,serviceInterface);
+            return decode( protocol);
 
         }
 
     }
 
-    private Object decode( TProtocol protocol ,boolean isNative ,String serviceInterface )
+    private Object decode( TProtocol protocol )
             throws IOException {
 
         // version
@@ -199,20 +191,11 @@ public class ThriftCodec implements Codec2 {
 
         try {
         	
-        	if (isNative)
-        	{
-        		serviceName = serviceInterface;
-        		message = protocol.readMessageBegin();
-        		id = message.seqid;//id不正确，会导致client报错
-        	}
-        	else
-        	{
         		 protocol.readI16();//跳过header size
                  protocol.readByte();//跳过版本
                  serviceName = protocol.readString();
                  id = protocol.readI64();
                  message = protocol.readMessageBegin();
-        	}
         	
         } catch ( TException e ) {
         	e.printStackTrace();
@@ -587,8 +570,6 @@ public class ThriftCodec implements Codec2 {
     private void encodeResponse( Channel channel, ChannelBuffer buffer, Response response )
             throws IOException {
 
-    	boolean isNative = Boolean.valueOf(channel.getUrl().getParameter("thrift_native"));
-    	
         RpcResult result = ( RpcResult ) response.getResult();
 
         RequestData rd = cachedRequest.get( response.getId() );
@@ -702,8 +683,7 @@ public class ThriftCodec implements Codec2 {
         byte[] bytes = new byte[4];
         try {
         	
-        	if (!isNative)//原生屏蔽掉
-        	{
+
                 // magic
                 protocol.writeI16( MAGIC );
                 // message length
@@ -717,7 +697,6 @@ public class ThriftCodec implements Codec2 {
                 // id
                 protocol.writeI64( response.getId() );
                 protocol.getTransport().flush();
-        	}
 
             headerLength = bos.size();
             // message
@@ -736,14 +715,11 @@ public class ThriftCodec implements Codec2 {
 
             try{
             	
-            	if (!isNative)//原生屏蔽掉
-            	{
             		 TFramedTransport.encodeFrameSize( messageLength, bytes );
                      bos.setWriteIndex( MESSAGE_LENGTH_INDEX );
                      protocol.writeI32( messageLength );
                      bos.setWriteIndex( MESSAGE_HEADER_LENGTH_INDEX );
                      protocol.writeI16( ( short ) ( 0xffff & headerLength ) );
-            	}
                
             } finally {
                 bos.setWriteIndex( oldIndex );
@@ -753,10 +729,7 @@ public class ThriftCodec implements Codec2 {
             throw new RpcException( RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e );
         }
 
-        if (!isNative)//原生屏蔽掉
-    	{
-        	buffer.writeBytes(bytes);
-    	}
+        buffer.writeBytes(bytes);
         buffer.writeBytes(bos.toByteArray());
     }
 

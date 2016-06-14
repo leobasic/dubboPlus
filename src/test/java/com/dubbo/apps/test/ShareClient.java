@@ -20,13 +20,13 @@ public class ShareClient {
 		
 		TTransport transport;
 		try {
-			transport = new TSocket("10.17.174.14", 20001);
+			transport = new TSocket("localhost", 20003);
 			TProtocol protocol = new TBinaryProtocol(transport);
 			
 			SharedService.Client client = new SharedService.Client(protocol);
 			transport.open();
 			
-			Man man = client.getStruct(1, new People(2,"名字",99,86475.387567));
+			Man man = client.getStruct(1, new People(2,"TSocket名字",99,86475.387567));
 			System.out.println(man.toString());
 			
 			transport.close();

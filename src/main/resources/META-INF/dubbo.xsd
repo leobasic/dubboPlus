@@ -320,6 +320,11 @@
 				<xsd:documentation><![CDATA[ The application version. ]]></xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+		<xsd:attribute name="dubboplus_version" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The application(dubboPlus) version. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="owner" type="xsd:string">
 			<xsd:annotation>
 				<xsd:documentation><![CDATA[ The application owner name (email prefix). ]]></xsd:documentation>
@@ -1051,12 +1056,6 @@
 								<tool:expected-type type="java.lang.Class" />
 							</tool:annotation>
 						</xsd:appinfo>
-					</xsd:annotation>
-				</xsd:attribute>
-				<xsd:attribute name="thrift_native" type="xsd:boolean"
-					use="optional">
-					<xsd:annotation>
-						<xsd:documentation><![CDATA[ Use Thrift Native Protocol invoke the service implementation class. ]]></xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
 				<xsd:attribute name="ref" type="xsd:string" use="optional">

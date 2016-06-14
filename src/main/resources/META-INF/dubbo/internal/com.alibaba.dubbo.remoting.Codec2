@@ -3,3 +3,5 @@ telnet=com.alibaba.dubbo.remoting.telnet.codec.TelnetCodec
 exchange=com.alibaba.dubbo.remoting.exchange.codec.ExchangeCodec
 dubbo=com.alibaba.dubbo.rpc.protocol.dubbo.DubboCountCodec
 thrift=com.alibaba.dubbo.rpc.protocol.thrift.ThriftCodec
+thriftx=com.alibaba.dubbo.rpc.protocol.thrift.ThriftNativeCodec
+protobuf=com.alibaba.dubbo.rpc.protocol.thrift.ThriftNativeCodec
