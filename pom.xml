@@ -185,6 +185,7 @@
 	</dependencies>
 
 	<build>
+	<pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
@@ -259,7 +260,29 @@
 					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/main/test</source>
+								<!-- 我们可以通过在这里添加多个source节点，来添加任意多个源文件夹 -->
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+		</pluginManagement>
 	</build>
 
 

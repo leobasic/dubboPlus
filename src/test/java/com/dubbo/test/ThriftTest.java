@@ -1,5 +1,7 @@
 package com.dubbo.test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Resource;
 
 import org.apache.thrift.TException;
@@ -20,6 +22,8 @@ import com.dubbo.apps.thrift2.SharedService;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ThriftTest {
 
+	private static final AtomicInteger THRIFT_SEQ_ID = new AtomicInteger( 0 );
+	
 	@Resource
 	private SharedService.Iface sharedService;
 	
@@ -62,7 +66,7 @@ public class ThriftTest {
 	
 	public static void main(String args[]) throws InvalidOperationException, TException
 	{
-		for (int i=0; i<1; i++)
+		for (int i=0; i<10; i++)
 		{
 			new Thread(new Runnable() {
 				
@@ -83,12 +87,12 @@ public class ThriftTest {
 				        referenceConfig.setApplication(application);
 				        referenceConfig.setTimeout(new Integer(60000));
 				        
-				        for (int j=0; j<1; j++)
+				        for (int j=0; j<10; j++)
 						{
 					        SharedService.Iface ssi = referenceConfig.get();
 					        
 					        try {
-								System.out.println(url.toString()+" \n "+ssi.getStruct(1, new People(2,url.toString(),99,86475.387567)));
+								System.out.println(ssi.getStruct(1, new People(2,String.valueOf( THRIFT_SEQ_ID.getAndIncrement() ),99,86475.387567)));
 							} catch (InvalidOperationException e) {
 							} catch (TException e) {
 							}

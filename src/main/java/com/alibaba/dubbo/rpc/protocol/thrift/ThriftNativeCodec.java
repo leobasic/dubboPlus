@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.thrift.TApplicationException;
@@ -42,28 +42,19 @@ import com.alibaba.dubbo.rpc.protocol.thrift.io.RandomAccessByteArrayOutputStrea
  * @date 2016年6月14日 下午2:08:26
  */
 public class ThriftNativeCodec implements Codec2 {
+	
+	//thrift原生id并发有问题，只能自己做了
+	private static final AtomicLong SEQ_ID = new AtomicLong( 0 );
 
-	private static final AtomicInteger THRIFT_SEQ_ID = new AtomicInteger(0);
-
-	private static final ConcurrentMap<String, Class<?>> cachedClass = new ConcurrentHashMap<String, Class<?>>();
+	private static final ConcurrentMap<String, Class<?>> cachedTBaseClass = new ConcurrentHashMap<String, Class<?>>();
 
 	static final ConcurrentMap<Long, RequestData> cachedRequest = new ConcurrentHashMap<Long, RequestData>();
-
-	public static final int MESSAGE_LENGTH_INDEX = 2;
-
-	public static final int MESSAGE_HEADER_LENGTH_INDEX = 6;
 
 	public static final int MESSAGE_SHORTEST_LENGTH = 10;
 
 	public static final String NAME = "thriftx";
 
-	public static final String PARAMETER_CLASS_NAME_GENERATOR = "class.name.generator";
-
-	public static final byte VERSION = (byte) 1;
-
-	public static final short MAGIC = (short) 0xdabc;
-
-	private TelnetCodec TELNET_CODEC = new TelnetCodec();
+	private final TelnetCodec TELNET_CODEC = new TelnetCodec();
 
 	public void encode(Channel channel, ChannelBuffer buffer, Object message) throws IOException {
 
@@ -102,20 +93,14 @@ public class ThriftNativeCodec implements Codec2 {
 
 	}
 
-	private Object decode(TProtocol protocol, String serviceInterface) throws IOException {
+	private Object decode(TProtocol protocol, String serviceName) throws IOException {
 
-		// version
-		String serviceName;
-		long id;
+		long seqId = this.nextSeqId();
 
 		TMessage message;
 
 		try {
-
-			serviceName = serviceInterface;
 			message = protocol.readMessageBegin();
-			id = message.seqid;// id不正确，会导致client报错
-
 		} catch (TException e) {
 			e.printStackTrace();
 			throw new IOException(e.getMessage(), e);
@@ -134,24 +119,24 @@ public class ThriftNativeCodec implements Codec2 {
 				throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, "The specified interface name incorrect.");
 			}
 
-			Class clazz = cachedClass.get(argsClassName);
+			Class<?> clazz = cachedTBaseClass.get(argsClassName);
 
 			if (clazz == null) {
 				try {
 
 					clazz = ClassHelper.forNameWithThreadContextClassLoader(argsClassName);
 
-					cachedClass.putIfAbsent(argsClassName, clazz);
+					cachedTBaseClass.putIfAbsent(argsClassName, clazz);
 
 				} catch (ClassNotFoundException e) {
 					throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
 				}
 			}
 
-			TBase args;
+			TBase<?, ?> args;
 
 			try {
-				args = (TBase) clazz.newInstance();
+				args = (TBase<?, ?>) clazz.newInstance();
 			} catch (InstantiationException e) {
 				throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
 			} catch (IllegalAccessException e) {
@@ -203,10 +188,10 @@ public class ThriftNativeCodec implements Codec2 {
 			result.setArguments(parameters.toArray());
 			result.setParameterTypes(parameterTypes.toArray(new Class[parameterTypes.size()]));
 
-			Request request = new Request(id);
+			Request request = new Request(seqId);
 			request.setData(result);
 
-			cachedRequest.putIfAbsent(id, RequestData.create(message.seqid, serviceName, message.name));
+			cachedRequest.putIfAbsent(seqId, RequestData.create(seqId, serviceName, message.name,message.seqid));
 
 			return request;
 
@@ -229,7 +214,7 @@ public class ThriftNativeCodec implements Codec2 {
 
 			response.setResult(result);
 
-			response.setId(id);
+			response.setId(seqId);
 
 			return response;
 
@@ -245,7 +230,7 @@ public class ThriftNativeCodec implements Codec2 {
 						.toString());
 			}
 
-			Class<?> clazz = cachedClass.get(resultClassName);
+			Class<?> clazz = cachedTBaseClass.get(resultClassName);
 
 			if (clazz == null) {
 
@@ -253,7 +238,7 @@ public class ThriftNativeCodec implements Codec2 {
 
 					clazz = ClassHelper.forNameWithThreadContextClassLoader(resultClassName);
 
-					cachedClass.putIfAbsent(resultClassName, clazz);
+					cachedTBaseClass.putIfAbsent(resultClassName, clazz);
 
 				} catch (ClassNotFoundException e) {
 					throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
@@ -312,7 +297,7 @@ public class ThriftNativeCodec implements Codec2 {
 
 			Response response = new Response();
 
-			response.setId(id);
+			response.setId(seqId);
 
 			RpcResult rpcResult = new RpcResult();
 
@@ -337,8 +322,8 @@ public class ThriftNativeCodec implements Codec2 {
 	private void encodeResponse(Channel channel, ChannelBuffer buffer, Response response) throws IOException {
 
 		RpcResult result = (RpcResult) response.getResult();
-		RequestData rd = cachedRequest.get(response.getId());
-
+		RequestData rd = cachedRequest.remove(response.getId());
+		
 		// 获得thrift生成client的代码中的类名
 		String resultClassName = ExtensionLoader
 				.getExtensionLoader(ClassNameGenerator.class).getExtension(channel.getUrl()
@@ -350,23 +335,23 @@ public class ThriftNativeCodec implements Codec2 {
 					.append("Could not encode response, the specified interface may be incorrect.").toString());
 		}
 
-		Class clazz = cachedClass.get(resultClassName);
+		Class<?> clazz = cachedTBaseClass.get(resultClassName);
 
 		if (clazz == null) {
 
 			try {
 				clazz = ClassHelper.forNameWithThreadContextClassLoader(resultClassName);
-				cachedClass.putIfAbsent(resultClassName, clazz);
+				cachedTBaseClass.putIfAbsent(resultClassName, clazz);
 			} catch (ClassNotFoundException e) {
 				throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
 			}
 
 		}
 
-		TBase resultObj;
+		TBase<?, ?> resultObj;
 
 		try {
-			resultObj = (TBase) clazz.newInstance();
+			resultObj = (TBase<?, ?>) clazz.newInstance();
 		} catch (InstantiationException e) {
 			throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
 		} catch (IllegalAccessException e) {
@@ -411,7 +396,7 @@ public class ThriftNativeCodec implements Codec2 {
 			}
 
 		} else {// thrift规定动作
-			Object realResult = result.getResult();
+			Object realResult = result.getValue();
 			// result field id is 0
 			String fieldName = resultObj.fieldForId(0).getFieldName();
 			String setMethodName = ThriftUtils.generateSetMethodName(fieldName);
@@ -433,9 +418,9 @@ public class ThriftNativeCodec implements Codec2 {
 		}
 
 		if (applicationException != null) {
-			message = new TMessage(rd.methodName, TMessageType.EXCEPTION, rd.id);
+			message = new TMessage(rd.methodName, TMessageType.EXCEPTION, rd.thrift_seq_id);
 		} else {
-			message = new TMessage(rd.methodName, TMessageType.REPLY, rd.id);
+			message = new TMessage(rd.methodName, TMessageType.REPLY, rd.thrift_seq_id);
 		}
 
 		RandomAccessByteArrayOutputStream bos = new RandomAccessByteArrayOutputStream(1024);
@@ -466,21 +451,25 @@ public class ThriftNativeCodec implements Codec2 {
 		buffer.writeBytes(bos.toByteArray());
 	}
 
-	// just for test
-	static int getSeqId() {
-		return THRIFT_SEQ_ID.get();
+	private long nextSeqId()
+	{
+		return SEQ_ID.getAndIncrement();
 	}
-
+	
+	
 	static class RequestData {
-		int id;
+		long id;
 		String serviceName;
 		String methodName;
+		int thrift_seq_id;
 
-		static RequestData create(int id, String sn, String mn) {
+		static RequestData create(long id, String sn, String mn,int thrift_seq_id) {
 			RequestData result = new RequestData();
 			result.id = id;
 			result.serviceName = sn;
 			result.methodName = mn;
+			result.thrift_seq_id = thrift_seq_id;
+			
 			return result;
 		}
 

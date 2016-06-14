@@ -97,7 +97,7 @@ public class ThriftCodec implements Codec2 {
     public static final short MAGIC = (short) 0xdabc;
     
     //telnet解码器（原来是不支持的）
-    private TelnetCodec TELNET_CODEC = new TelnetCodec();
+    private final TelnetCodec TELNET_CODEC = new TelnetCodec();
 
     public void encode( Channel channel, ChannelBuffer buffer, Object message )
             throws IOException {
@@ -572,7 +572,7 @@ public class ThriftCodec implements Codec2 {
 
         RpcResult result = ( RpcResult ) response.getResult();
 
-        RequestData rd = cachedRequest.get( response.getId() );
+        RequestData rd = cachedRequest.remove(response.getId());
 
         //获得thrift生成client的代码中的类名
         String resultClassName = ExtensionLoader.getExtensionLoader( ClassNameGenerator.class ).getExtension(

@@ -33,6 +33,7 @@
 # Bug Fix
 
 修复dubbo thrift协议下，不能使用telnet命令
+修复dubbo thrift协议下，cacherequest有内存溢出风险
 
 
 
