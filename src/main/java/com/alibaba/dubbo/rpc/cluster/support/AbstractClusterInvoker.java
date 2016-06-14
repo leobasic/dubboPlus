@@ -256,7 +256,6 @@ public abstract class AbstractClusterInvoker<T> implements Invoker<T> {
     protected abstract Result doInvoke(Invocation invocation, List<Invoker<T>> invokers,
                                        LoadBalance loadbalance) throws RpcException;
     
-    //思考：增加标签，某些协议可以标记不参与轮训？？
     protected  List<Invoker<T>> list(Invocation invocation) throws RpcException {
     	List<Invoker<T>> invokers = directory.list(invocation);
     	return invokers;

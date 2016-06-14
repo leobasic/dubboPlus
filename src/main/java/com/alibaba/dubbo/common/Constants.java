@@ -576,6 +576,14 @@ public class Constants {
     public static final String GENERIC_SERIALIZATION_NATIVE_JAVA   = "nativejava";
 
     public static final String GENERIC_SERIALIZATION_DEFAULT       = "true";
+    
+    //内部调用忽略原生协议
+    public static final String IGNORE_NATIVE_THRIFT       		   = "thriftx";
+    
+    public static final String IGNORE_NATIVE_PROTOBUF     		   = "protobuf";
+    
+    
+    
 
     /*
      * private Constants(){ }

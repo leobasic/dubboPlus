@@ -368,6 +368,12 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             if (Constants.EMPTY_PROTOCOL.equals(providerUrl.getProtocol())) {
                 continue;
             }
+            //忽略掉原生协议
+            if (Constants.IGNORE_NATIVE_PROTOBUF.equals(providerUrl.getProtocol()) ||
+            		Constants.IGNORE_NATIVE_THRIFT.equals(providerUrl.getProtocol())
+            		) {
+                continue;
+            }
             if (! ExtensionLoader.getExtensionLoader(Protocol.class).hasExtension(providerUrl.getProtocol())) {
                 logger.error(new IllegalStateException("Unsupported protocol " + providerUrl.getProtocol() + " in notified url: " + providerUrl + " from registry " + getUrl().getAddress() + " to consumer " + NetUtils.getLocalHost() 
                         + ", supported protocol: "+ExtensionLoader.getExtensionLoader(Protocol.class).getSupportedExtensions()));

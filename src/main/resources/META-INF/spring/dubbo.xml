@@ -23,6 +23,8 @@
 	
 	<dubbo:protocol name="dubbo" port="20002" />
 	<dubbo:protocol name="thrift" port="20001" />
+	<dubbo:protocol name="thriftx" port="20003" />
+	<dubbo:protocol name="protobuf" port="20004" />
 
 	<!-- 声明需要暴露的服务接口
 	<dubbo:service interface="com.dubbo.apps.test.SampleFunction" ref="sampleFunction" />
@@ -33,7 +35,7 @@
 	
 	<!--<dubbo:service interface="com.dubbo.apps.thrift.Hello$Iface"  class="com.dubbo.apps.thrift.HelloServiceImpl"  /> -->
 
-	 <dubbo:service interface="com.dubbo.apps.thrift2.SharedService$Iface"  class="com.dubbo.apps.thrift2.SharedServiceImpl" /> 
+	<dubbo:service interface="com.dubbo.apps.thrift2.SharedService$Iface"  class="com.dubbo.apps.thrift2.SharedServiceImpl" /> 
 
 
 
