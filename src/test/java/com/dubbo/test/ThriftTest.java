@@ -1,4 +1,4 @@
-package com.dubbo.apps.test;
+package com.dubbo.test;
 
 import javax.annotation.Resource;
 

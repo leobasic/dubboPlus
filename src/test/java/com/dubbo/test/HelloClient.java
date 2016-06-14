@@ -1,4 +1,4 @@
-package com.dubbo.apps.test;
+package com.dubbo.test;
 
 import java.io.UnsupportedEncodingException;
 
@@ -9,39 +9,35 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import com.dubbo.apps.thrift2.InvalidOperationException;
-import com.dubbo.apps.thrift2.Man;
-import com.dubbo.apps.thrift2.People;
-import com.dubbo.apps.thrift2.SharedService;
+import com.dubbo.apps.thrift.Hello;
 
-public class ShareClient {
+public class HelloClient {
 
 	public void startClient() throws UnsupportedEncodingException {
 		
 		TTransport transport;
 		try {
-			transport = new TSocket("localhost", 20003);
+			transport = new TSocket("localhost", 20001);
 			TProtocol protocol = new TBinaryProtocol(transport);
-			
-			SharedService.Client client = new SharedService.Client(protocol);
+			Hello.Client client = new Hello.Client(protocol);
 			transport.open();
 			
-			Man man = client.getStruct(1, new People(2,"TSocket名字",99,86475.387567));
-			System.out.println(man.toString());
+			for (int i=0; i<10000; i++)
+			{
+				System.out.println(i+") "+client.helloString("哈哈ooo改造成功！"));
+			}
+			
 			
 			transport.close();
-			
 		} catch (TTransportException e) {
 			e.printStackTrace();
 		} catch (TException e) {
-			e.printStackTrace();
-		} catch (InvalidOperationException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void main(String[] args) throws UnsupportedEncodingException {
-		ShareClient client = new ShareClient();
+		HelloClient client = new HelloClient();
 		client.startClient();
 	}
 

@@ -1,9 +1,12 @@
-package com.dubbo.apps.test;
+package com.dubbo.test;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
+
+import com.dubbo.apps.test.DataBean;
+import com.dubbo.apps.test.SampleFunction;
 
 //@ContextConfiguration(locations = { "classpath:dubbo-services2.xml" })
 //@RunWith(SpringJUnit4ClassRunner.class)

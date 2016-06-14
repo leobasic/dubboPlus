@@ -1,4 +1,4 @@
-package com.dubbo.apps.test;
+package com.dubbo.test;
 
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TBinaryProtocol.Factory;
