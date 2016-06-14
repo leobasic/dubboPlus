@@ -30,4 +30,9 @@
 
 
 
+# Bug Fix
+
+修复dubbo thrift协议下，不能使用telnet命令
+
+
 
