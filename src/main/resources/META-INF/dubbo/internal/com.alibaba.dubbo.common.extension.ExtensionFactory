@@ -1,0 +1,3 @@
+adaptive=com.alibaba.dubbo.common.extension.factory.AdaptiveExtensionFactory
+spi=com.alibaba.dubbo.common.extension.factory.SpiExtensionFactory
+spring=com.alibaba.dubbo.config.spring.extension.SpringExtensionFactory

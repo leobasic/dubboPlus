@@ -1,0 +1,3 @@
+netty=com.alibaba.dubbo.remoting.transport.netty.NettyTransporter
+mina=com.alibaba.dubbo.remoting.transport.mina.MinaTransporter
+grizzly=com.alibaba.dubbo.remoting.transport.grizzly.GrizzlyTransporter
