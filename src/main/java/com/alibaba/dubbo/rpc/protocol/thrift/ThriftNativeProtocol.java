@@ -2,6 +2,8 @@
 package com.alibaba.dubbo.rpc.protocol.thrift;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -21,6 +23,7 @@ import com.alibaba.dubbo.remoting.exchange.support.ExchangeHandlerAdapter;
 import com.alibaba.dubbo.rpc.Exporter;
 import com.alibaba.dubbo.rpc.Invocation;
 import com.alibaba.dubbo.rpc.Invoker;
+import com.alibaba.dubbo.rpc.Protocol;
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.dubbo.rpc.RpcException;
 import com.alibaba.dubbo.rpc.protocol.AbstractProtocol;
@@ -51,6 +54,7 @@ public class ThriftNativeProtocol extends AbstractProtocol {
                 String serviceKey = serviceKey( channel.getLocalAddress().getPort(),
                                                 serviceName, null, null );
                 DubboExporter<?> exporter = (DubboExporter<?>) exporterMap.get( serviceKey );
+                
                 if (exporter == null) {
                     throw new RemotingException(channel,
                                                 "Not found exported service: "
@@ -109,10 +113,27 @@ public class ThriftNativeProtocol extends AbstractProtocol {
         key = serviceKey(url);
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
         exporterMap.put(key, exporter);
-
+        
         return exporter;
     }
 
+    private static ThriftNativeProtocol INSTANCE;
+
+    public ThriftNativeProtocol() {
+        INSTANCE = this;
+    }
+    
+    public static ThriftNativeProtocol getInstance() {
+        if (INSTANCE == null) {
+            ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(ThriftNativeProtocol.NAME); // load
+        }
+        return INSTANCE;
+    }
+    
+    public Collection<String> getExporterKeys() {
+        return Collections.unmodifiableCollection(exporterMap.keySet());
+    }
+    
     public void destroy() {
 
         super.destroy();

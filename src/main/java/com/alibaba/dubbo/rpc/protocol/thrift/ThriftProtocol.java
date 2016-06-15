@@ -14,6 +14,7 @@
 package com.alibaba.dubbo.rpc.protocol.thrift;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -62,6 +63,7 @@ public class ThriftProtocol extends AbstractProtocol {
                 String serviceKey = serviceKey( channel.getLocalAddress().getPort(),
                                                 serviceName, null, null );
                 DubboExporter<?> exporter = (DubboExporter<?>) exporterMap.get( serviceKey );
+                
                 if (exporter == null) {
                     throw new RemotingException(channel,
                                                 "Not found exported service: "

@@ -45,6 +45,7 @@ import com.alibaba.dubbo.rpc.Invoker;
 import com.alibaba.dubbo.rpc.Protocol;
 import com.alibaba.dubbo.rpc.ProxyFactory;
 import com.alibaba.dubbo.rpc.cluster.ConfiguratorFactory;
+import com.alibaba.dubbo.rpc.protocol.thrift.ThriftNativeCodec;
 import com.alibaba.dubbo.rpc.service.GenericService;
 
 /**
@@ -279,6 +280,15 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         List<URL> registryURLs = loadRegistries(true);
         //因为dubbo支持多协议配置，遍历所有协议分别根据不同的协议把服务export到不同的注册中心上去
         for (ProtocolConfig protocolConfig : protocols) {
+        	
+        	//thrift原生协议，不对非thrift生成的代码进行暴露，因为暴露了也没用
+        	if ( protocolConfig.getName().equals(ThriftNativeCodec.NAME) &&
+        			interfaceName.toString().indexOf("$")==-1
+        	)
+        	{
+        		continue;
+        	}
+        	
             doExportUrlsFor1Protocol(protocolConfig, registryURLs);
         }
     }

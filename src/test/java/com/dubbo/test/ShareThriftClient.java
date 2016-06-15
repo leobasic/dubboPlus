@@ -21,7 +21,7 @@ public class ShareThriftClient {
 	
 	public void startClient() throws UnsupportedEncodingException {
 		
-		for (int j=0; j<100; j++)
+		for (int j=0; j<1; j++)
 		{
 			new Thread(new Runnable() {
 				
@@ -37,7 +37,7 @@ public class ShareThriftClient {
 						transport.open();
 						
 						
-						for (int i=0; i<100; i++)
+						for (int i=0; i<1; i++)
 						{
 							int uid = THRIFT_SEQ_ID.getAndIncrement();
 							String tn = Thread.currentThread().getName();

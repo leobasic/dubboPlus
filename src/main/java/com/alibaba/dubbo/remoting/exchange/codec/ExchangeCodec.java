@@ -81,6 +81,7 @@ public class ExchangeCodec extends TelnetCodec {
     }
 
     public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {
+    	
        int readable = buffer.readableBytes();
         byte[] header = new byte[Math.min(readable, HEADER_LENGTH)];
         buffer.readBytes(header);

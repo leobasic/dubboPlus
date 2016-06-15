@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -73,7 +74,14 @@ public class ThriftNativeCodec implements Codec2 {
 
 	public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {
 
-		String serviceInterface = channel.getUrl().getServiceInterface();
+		//目前只支持配置一个thrift 接口，配置多个，默认选择最后一个配置
+		Collection<String> serviceInterfaces = ThriftNativeProtocol.getInstance().getExporterKeys();
+		if (serviceInterfaces.size()==0)
+		{
+			throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, "Can't find any thrift interface.");
+		}
+		String serviceInterfaceA[] = serviceInterfaces.toArray(new String[serviceInterfaces.size()]);
+		String serviceInterface = serviceInterfaceA[serviceInterfaceA.length-1].split(":")[0];
 
 		int available = buffer.readableBytes();
 
@@ -130,6 +138,14 @@ public class ThriftNativeCodec implements Codec2 {
 
 				} catch (ClassNotFoundException e) {
 					throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+//					RpcResult exResult = new RpcResult();
+//					exResult.setException(new RpcException("哈哈"+e.getMessage()));
+//
+//					Response response = new Response();
+//					response.setResult(result);
+//					response.setId(seqId);
+//					
+//					return response;
 				}
 			}
 
@@ -417,7 +433,7 @@ public class ThriftNativeCodec implements Codec2 {
 
 		}
 
-		if (applicationException != null) {
+		if (applicationException != null|| ((RpcResult)response.getResult()).hasException() ) {
 			message = new TMessage(rd.methodName, TMessageType.EXCEPTION, rd.thrift_seq_id);
 		} else {
 			message = new TMessage(rd.methodName, TMessageType.REPLY, rd.thrift_seq_id);

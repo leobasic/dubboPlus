@@ -70,6 +70,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
     public static ApplicationContext getSpringContext() {
 	    return SPRING_CONTEXT;
 	}
+    
 
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;

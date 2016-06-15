@@ -36,7 +36,7 @@ public class ThriftTest {
 		try {
 			
 			
-			for (int i=0; i<1; i++)
+			for (int i=0; i<50; i++)
 			{
 				Man man = sharedService.getStruct(1, new People(2,"名字@"+i,99,86475.387567));
 				System.out.println(man.toString());
@@ -66,7 +66,7 @@ public class ThriftTest {
 	
 	public static void main(String args[]) throws InvalidOperationException, TException
 	{
-		for (int i=0; i<10; i++)
+		for (int i=0; i<1; i++)
 		{
 			new Thread(new Runnable() {
 				
@@ -87,7 +87,7 @@ public class ThriftTest {
 				        referenceConfig.setApplication(application);
 				        referenceConfig.setTimeout(new Integer(60000));
 				        
-				        for (int j=0; j<10; j++)
+				        for (int j=0; j<1; j++)
 						{
 					        SharedService.Iface ssi = referenceConfig.get();
 					        
