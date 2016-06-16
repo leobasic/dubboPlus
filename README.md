@@ -9,8 +9,21 @@
 ![alt text](/performance.png "Title")
 
 ##### thrift原生协议使用方法
+`
+	<dubbo:protocol name="dubbo" port="20002" />
+	<dubbo:protocol name="thrift" port="20001" />
+	<dubbo:protocol name="thriftx" port="20003" />
 
-待续......
+	<dubbo:service interface="com.dubbo.apps.test.SampleFunction"
+		class="com.dubbo.apps.test.SampleFunctionImpl" />
+
+	<dubbo:service interface="com.dubbo.apps.test.SampleFunction2"
+		class="com.dubbo.apps.test.SampleFunctionImpl2" />
+
+	<dubbo:service interface="com.dubbo.apps.thrift.Hello$Iface"
+		class="com.dubbo.apps.thrift.HelloServiceImpl" />
+	<dubbo:service interface="com.dubbo.apps.thrift2.SharedService$Iface"
+		class="com.dubbo.apps.thrift2.SharedServiceImpl" />
 
 
 # Bug Fix
