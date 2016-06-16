@@ -10,6 +10,7 @@
 
 ##### thrift原生协议使用方法
 
+以下是一个非典型配置，估计很多人没有多协议配置，甚至都不知道可以这样，但很有代表性：
 
 	<dubbo:protocol name="dubbo" port="20002" />
 	<dubbo:protocol name="thrift" port="20001" /> （dubbo thrift协议）
