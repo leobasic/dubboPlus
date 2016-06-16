@@ -2,13 +2,15 @@
 
   - 基于dubbo2.5.3扩展
   - 高性能的、支持容错的、协议无关且异步的RPC框架
-  - 增加了对thrift原生协议支持，从而实现了更多语言的调用
+  - 增加了对thrift原生协议支持，从而实现了更多语言的调用		
 
-##### dubbo三种协议性能对比
 
-![alt text](/performance.png "Title")
+# dubbo三种协议性能对比
 
-##### thrift原生协议使用方法
+![alt text](/performance.png "Title")		
+
+
+# thrift原生协议使用方法
 
 以下是一个非典型配置，估计很多人没有多协议配置，甚至都不知道可以这样，但很有代表性：
 
@@ -29,7 +31,7 @@
 				class="com.dubbo.apps.thrift2.SharedServiceImpl"/>
 
 以上配置说明：所有服务分别通过dubbo和dubbo thrift协议进行暴露。thrift原生协议只暴露带$接口服务。		
-当前版本，配置多个$服务，只暴露其中一个。所以，使用原生thrift协议，请把所有服务合并到一个service中进行暴露。
+当前版本，配置多个$服务，只暴露其中一个。所以，使用原生thrift协议，请把所有服务合并到一个service中进行暴露。			
 
 
 
