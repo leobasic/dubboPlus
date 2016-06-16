@@ -10,24 +10,6 @@
 2、对内置的thrift解码、编码模块进行改造，根据thrift_native值，去兼容原生调用，关键在于原生调用的时候，正确解码出request和编码response。
 
 ##### dubbo三种协议性能对比
-- dubbo协议:           
-    11280TPS/100ts  
-    11215TPS/300ts  
-    11184TPS/500ts  
-    11405TPS/800ts
-
-- dubbo thrift协议:     
-    25041TPS/100ts  
-    27348TPS/300ts  
-    26416TPS/500ts   
-    26889TPS/800ts
-
-- thrift协议:     
-    30165TPS/100ts  
-    62315TPS/300ts  
-    58952TPS/500ts   
-    50782TPS/800ts
-
 
 ![alt text](/performance.png "Title")
 
