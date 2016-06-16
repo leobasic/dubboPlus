@@ -29,6 +29,8 @@
     50782TPS/800ts
 
 
+![alt text](/performance.png "Title")
+
 
 # Bug Fix
 
