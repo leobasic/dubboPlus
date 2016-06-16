@@ -27,8 +27,8 @@
 	<dubbo:service interface="com.dubbo.apps.thrift2.SharedService$Iface"
 		class="com.dubbo.apps.thrift2.SharedServiceImpl" />
 
-以上配置说明：非thrift服务分别通过dubbo和dubbo thrift协议进行暴露。thrift原生协议只暴露带$接口服务。		
-当前版本，配置多个$服务，只暴露其中一个。
+以上配置说明：所有服务分别通过dubbo和dubbo thrift协议进行暴露。thrift原生协议只暴露带$接口服务。		
+当前版本，配置多个$服务，只暴露其中一个。所以，使用原生thrift协议，请把所有服务合并到一个service中进行暴露。
 
 
 
