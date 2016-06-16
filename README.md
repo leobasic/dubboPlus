@@ -13,17 +13,19 @@
 
 	<dubbo:protocol name="dubbo" port="20002" />
 	<dubbo:protocol name="thrift" port="20001" /> （dubbo thrift协议）
-	<dubbo:protocol name="`thriftx`" port="20003" />
+	<dubbo:protocol name="thriftx" port="20003" />
 
 	<!-- 声明需要暴露的服务接口 -->
 	<dubbo:service interface="com.dubbo.apps.test.SampleFunction"
-		class="com.dubbo.apps.test.SampleFunctionImpl" />
+				class="com.dubbo.apps.test.SampleFunctionImpl" />
 
 	<dubbo:service interface="com.dubbo.apps.test.SampleFunction2"
-		class="com.dubbo.apps.test.SampleFunctionImpl2" />
+				class="com.dubbo.apps.test.SampleFunctionImpl2" />
 
-	<dubbo:service interface="`com.dubbo.apps.thrift.Hello$Iface`" class="com.dubbo.apps.thrift.HelloServiceImpl" />
-	<dubbo:service interface="`com.dubbo.apps.thrift2.SharedService$Iface`" class="com.dubbo.apps.thrift2.SharedServiceImpl"/>
+	<dubbo:service interface="com.dubbo.apps.thrift.Hello$Iface" 
+				class="com.dubbo.apps.thrift.HelloServiceImpl" />
+	<dubbo:service interface="com.dubbo.apps.thrift2.SharedService$Iface" 	
+				class="com.dubbo.apps.thrift2.SharedServiceImpl"/>
 
 以上配置说明：所有服务分别通过dubbo和dubbo thrift协议进行暴露。thrift原生协议只暴露带$接口服务。		
 当前版本，配置多个$服务，只暴露其中一个。所以，使用原生thrift协议，请把所有服务合并到一个service中进行暴露。
