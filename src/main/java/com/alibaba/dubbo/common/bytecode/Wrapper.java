@@ -341,6 +341,13 @@ public abstract class Wrapper
 		cc.addMethod(c2.toString());
 		cc.addMethod(c3.toString());
 		
+		System.err.println(cc.getClassName());
+		System.err.println(c1.toString());
+		System.err.println(c2.toString());
+		System.err.println(c3.toString());
+		System.err.println("");
+		
+		
 		try
 		{
 			Class<?> wc = cc.toClass();
