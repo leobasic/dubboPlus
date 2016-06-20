@@ -2,7 +2,7 @@
 
   - 基于dubbo2.5.3扩展
   - 高性能的、支持容错的、协议无关的RPC框架
-  - 增加了对thrift原生协议支持，从而实现了跨语言调用（C++, Java, Python, PHP, Ruby, Erlang, Perl, Haskell, C#, Cocoa, JavaScript, Node.js, Smalltalk, and OCaml）		
+  - 增加了对thrift(0.8.0)原生协议支持，从而实现了跨语言调用（C++, Java, Python, PHP, Ruby, Erlang, Perl, Haskell, C#, Cocoa, JavaScript, Node.js, Smalltalk, and OCaml）		
 
 
 # dubbo三种协议性能对比
