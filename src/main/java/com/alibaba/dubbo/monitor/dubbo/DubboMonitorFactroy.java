@@ -42,7 +42,7 @@ public class DubboMonitorFactroy extends AbstractMonitorFactory {
     public void setProxyFactory(ProxyFactory proxyFactory) {
         this.proxyFactory = proxyFactory;
     }
-    
+
     @Override
     protected Monitor createMonitor(URL url) {
         url = url.setProtocol(url.getParameter(Constants.PROTOCOL_KEY, "dubbo"));

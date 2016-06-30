@@ -56,7 +56,7 @@ public class MonitorFilter implements Filter {
     
     // 调用过程拦截
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        if (invoker.getUrl().hasParameter(Constants.MONITOR_KEY)) {
+        if (invoker.getUrl().hasParameter(Constants.MONITOR_KEY)) {//就是配置了monitor监控
             RpcContext context = RpcContext.getContext(); // 提供方必须在invoke()之前获取context信息
             long start = System.currentTimeMillis(); // 记录起始时间戮
             getConcurrent(invoker, invocation).incrementAndGet(); // 并发计数

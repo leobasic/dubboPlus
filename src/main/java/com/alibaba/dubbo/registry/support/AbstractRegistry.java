@@ -397,7 +397,7 @@ public abstract class AbstractRegistry implements Registry {
             if (listeners != null) {
                 for (NotifyListener listener : listeners) {
                     try {
-                        notify(url, listener, filterEmpty(url, urls));
+                         ;
                     } catch (Throwable t) {
                         logger.error("Failed to notify registry event, urls: " +  urls + ", cause: " + t.getMessage(), t);
                     }

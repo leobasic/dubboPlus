@@ -1,5 +1,6 @@
 package com.dubbo.test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Resource;
@@ -12,9 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ReferenceConfig;
+import com.dubbo.apps.test.SampleFunction;
 import com.dubbo.apps.thrift.Hello;
 import com.dubbo.apps.thrift2.InvalidOperationException;
-import com.dubbo.apps.thrift2.Man;
 import com.dubbo.apps.thrift2.People;
 import com.dubbo.apps.thrift2.SharedService;
 
@@ -29,31 +30,36 @@ public class ThriftTest {
 	
 	@Resource
 	private Hello.Iface hello;
+	
+	@Resource
+	private SampleFunction sampleFunction;
 
 	@Test
 	public void test() {
 		
-		try {
+//		try {
 			
 			
-			for (int i=0; i<50; i++)
+			for (int i=0; i<6; i++)
 			{
-				Man man = sharedService.getStruct(1, new People(2,"名字@"+i,99,86475.387567));
-				System.out.println(man.toString());
+//				Man man = sharedService.getStruct(1, new People(2,"名字@"+i,99,86475.387567));
+//				System.out.println(man.toString());
+				
+				sampleFunction.processString("hi");
 			}
 			
 			
 			
-		} catch (InvalidOperationException e) {
-			
-			e.printStackTrace();
-			
-		} catch (TException e) {
-			
-			e.printStackTrace();
-			
-		}
-		
+//		} catch (InvalidOperationException e) {
+//			
+//			e.printStackTrace();
+//			
+//		} catch (TException e) {
+//			
+//			e.printStackTrace();
+//			
+//		}
+//		
 		
 //		try {
 //			hello.helloString("AA");
@@ -64,7 +70,7 @@ public class ThriftTest {
 	}
 
 	
-	public static void main(String args[]) throws InvalidOperationException, TException
+	public static void main(String args[]) throws InvalidOperationException, TException, UnsupportedEncodingException
 	{
 		for (int i=0; i<1; i++)
 		{
@@ -76,7 +82,7 @@ public class ThriftTest {
 						ReferenceConfig<SharedService.Iface> referenceConfig = new ReferenceConfig<SharedService.Iface>();
 				        referenceConfig.setInterface(SharedService.Iface.class);
 				        StringBuilder url = new StringBuilder();
-				        url.append("thrift://localhost:20001");
+				        url.append("dubbo://localhost:20002");
 				        url.append("/");
 				        url.append(SharedService.Iface.class.getName());
 				        referenceConfig.setUrl(url.toString());
@@ -102,6 +108,8 @@ public class ThriftTest {
 				
 			}).start();
 		}
+		
+		
 	}
 	
 	

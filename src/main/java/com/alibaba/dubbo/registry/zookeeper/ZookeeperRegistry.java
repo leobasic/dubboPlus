@@ -162,6 +162,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
                         zkListener = listeners.get(listener);
                     }
                     zkClient.create(path, false);
+                    //断点监控下！！
                     List<String> children = zkClient.addChildListener(path, zkListener);
                     if (children != null) {
                     	urls.addAll(toUrlsWithEmpty(url, path, children));
@@ -222,7 +223,17 @@ public class ZookeeperRegistry extends FailbackRegistry {
         if (Constants.ANY_VALUE.equals(name)) {
             return toRootPath();
         }
-        return toRootDir() + URL.encode(name);
+        //这里处理一种特殊情况，就是配置的thrift接口，带有$(%24)，不做encode处理
+        //否则会导致%号不断循环被encode，导致zookeeper数据无限增长！
+        if ( name.indexOf("%24")>=0 )
+        {
+        	 return toRootDir() + name;
+        }
+        else
+        {
+        	 return toRootDir() + URL.encode(name);
+        }
+        
     }
 
     private String[] toCategoriesPath(URL url) {
