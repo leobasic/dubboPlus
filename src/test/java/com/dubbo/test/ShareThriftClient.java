@@ -37,7 +37,7 @@ public class ShareThriftClient {
 						transport.open();
 						
 						
-						for (int i=0; i<1; i++)
+						for (int i=0; i<10; i++)
 						{
 							int uid = THRIFT_SEQ_ID.getAndIncrement();
 							String tn = Thread.currentThread().getName();

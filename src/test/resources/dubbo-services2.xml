@@ -16,10 +16,10 @@
 
 
 	<dubbo:application name="echo-service-consumer" />
-	<dubbo:registry protocol="zookeeper" address="10.17.174.61:2181" />
+	<dubbo:registry protocol="zookeeper" address="localhost:2181" />
 
 	<dubbo:reference timeout="6000000" retries="0" check="false"
-		 id="sampleFunction" interface="com.dubbo.apps.test.SampleFunction" />
+		 id="sampleFunction" interface="com.dubbo.apps.test.SampleFunction" protocol="thrift" />
 
 	<dubbo:reference timeout="6000000" retries="0" check="false"
 		 id="hello" interface="com.dubbo.apps.thrift.Hello$Iface" />

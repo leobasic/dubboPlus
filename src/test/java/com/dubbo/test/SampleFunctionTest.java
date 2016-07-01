@@ -5,17 +5,30 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
+import org.apache.thrift.TException;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import com.dubbo.apps.test.DataBean;
 import com.dubbo.apps.test.SampleFunction;
+import com.dubbo.apps.thrift2.InvalidOperationException;
+import com.dubbo.apps.thrift2.Man;
+import com.dubbo.apps.thrift2.People;
+import com.dubbo.apps.thrift2.SharedService;
 
-//@ContextConfiguration(locations = { "classpath:dubbo-services2.xml" })
-//@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:dubbo-services2.xml" })
+@RunWith(SpringJUnit4ClassRunner.class)
 public class SampleFunctionTest {
 
 	@Resource
 	private SampleFunction sampleFunction;
+	
+	@Resource
+	private SharedService.Iface sharedService;
 
-	//@Test
+	@Test
 	public void test() {
 		for (int i = 0; i < 1; i++) {
 			try {
@@ -61,5 +74,27 @@ public class SampleFunctionTest {
 			}
 		}
 	}
+	
+	
+	//@Test
+	public void test2() {
+		for (int i = 0; i < 2; i++) {
+			
+			Man man;
+			try {
+				man = sharedService.getStruct(1, new People(2,"123",99,86475.387567));
+				System.out.println(man.toString());
+			} catch (InvalidOperationException e) {
+				e.printStackTrace();
+			} catch (TException e) {
+				e.printStackTrace();
+			}
+			
+			
+			
+		}
+	}
+	
+	
 
 }
