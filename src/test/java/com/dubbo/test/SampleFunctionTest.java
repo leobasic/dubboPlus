@@ -30,7 +30,7 @@ public class SampleFunctionTest {
 
 	@Test
 	public void test() {
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i <10; i++) {
 			try {
 				ConcurrentHashMap<String, String> ccm1 = new ConcurrentHashMap<String, String>();
 				ccm1.put("ccm1Key1", "ccm1Val1");
@@ -68,10 +68,11 @@ public class SampleFunctionTest {
 				e.printStackTrace();
 			}
 
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-			}
+		}
+		
+		try {
+			Thread.sleep(100000);
+		} catch (InterruptedException e) {
 		}
 	}
 	

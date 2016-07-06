@@ -19,7 +19,7 @@
 	<dubbo:registry protocol="zookeeper" address="localhost:2181" />
 
 	<dubbo:reference timeout="6000000" retries="0" check="false"
-		 id="sampleFunction" interface="com.dubbo.apps.test.SampleFunction" protocol="thrift" />
+		 id="sampleFunction" interface="com.dubbo.apps.test.SampleFunction"  />
 
 	<dubbo:reference timeout="6000000" retries="0" check="false"
 		 id="hello" interface="com.dubbo.apps.thrift.Hello$Iface" />

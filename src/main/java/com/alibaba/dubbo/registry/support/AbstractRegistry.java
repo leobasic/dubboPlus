@@ -423,6 +423,7 @@ public abstract class AbstractRegistry implements Registry {
         }
         Map<String, List<URL>> result = new HashMap<String, List<URL>>();
         for (URL u : urls) {
+        	
             if (UrlUtils.isMatch(url, u)) {
             	String category = u.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);
             	List<URL> categoryList = result.get(category);
@@ -446,6 +447,7 @@ public abstract class AbstractRegistry implements Registry {
             List<URL> categoryList = entry.getValue();
             categoryNotified.put(category, categoryList);
             saveProperties(url);
+            
             listener.notify(categoryList);
         }
     }

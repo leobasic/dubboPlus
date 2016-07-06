@@ -114,6 +114,7 @@ public class RegistryProtocol implements Protocol {
         final URL overrideSubscribeUrl = getSubscribedOverrideUrl(registedProviderUrl);
         final OverrideListener overrideSubscribeListener = new OverrideListener(overrideSubscribeUrl);
         overrideListeners.put(overrideSubscribeUrl, overrideSubscribeListener);
+        
         registry.subscribe(overrideSubscribeUrl, overrideSubscribeListener);//订阅。。。。
         //保证每次export都返回一个新的exporter实例
         return new Exporter<T>() {

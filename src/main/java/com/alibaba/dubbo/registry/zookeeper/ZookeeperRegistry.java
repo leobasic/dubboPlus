@@ -114,6 +114,9 @@ public class ZookeeperRegistry extends FailbackRegistry {
     protected void doSubscribe(final URL url, final NotifyListener listener) {
         try {
             if (Constants.ANY_VALUE.equals(url.getServiceInterface())) {
+            	
+            	//System.out.println("1> "+url.toString());
+            	
                 String root = toRootPath();
                 ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.get(url);
                 if (listeners == null) {
@@ -145,6 +148,9 @@ public class ZookeeperRegistry extends FailbackRegistry {
                     }
                 }
             } else {
+            	
+            	//System.out.println("2> "+url.toString());
+            	
                 List<URL> urls = new ArrayList<URL>();
                 for (String path : toCategoriesPath(url)) {
                     ConcurrentMap<NotifyListener, ChildListener> listeners = zkListeners.get(url);
@@ -154,6 +160,8 @@ public class ZookeeperRegistry extends FailbackRegistry {
                     }
                     ChildListener zkListener = listeners.get(listener);
                     if (zkListener == null) {
+                    	//System.out.println("[2>zkListener == null] > "+url.toString());
+                    	//System.out.println("");
                         listeners.putIfAbsent(listener, new ChildListener() {
                             public void childChanged(String parentPath, List<String> currentChilds) {
                             	ZookeeperRegistry.this.notify(url, listener, toUrlsWithEmpty(url, parentPath, currentChilds));
@@ -165,6 +173,8 @@ public class ZookeeperRegistry extends FailbackRegistry {
                     //断点监控下！！
                     List<String> children = zkClient.addChildListener(path, zkListener);
                     if (children != null) {
+                    	//System.out.println("[2>children != null] > "+url.toString());
+                    	//System.out.println("");
                     	urls.addAll(toUrlsWithEmpty(url, path, children));
                     }
                 }
@@ -260,6 +270,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
     }
     
     private List<URL> toUrlsWithoutEmpty(URL consumer, List<String> providers) {
+    	
     	List<URL> urls = new ArrayList<URL>();
         if (providers != null && providers.size() > 0) {
             for (String provider : providers) {
@@ -272,6 +283,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
                 }
             }
         }
+        
         return urls;
     }
 
@@ -283,6 +295,8 @@ public class ZookeeperRegistry extends FailbackRegistry {
         	URL empty = consumer.setProtocol(Constants.EMPTY_PROTOCOL).addParameter(Constants.CATEGORY_KEY, category);
             urls.add(empty);
         }
+       //System.out.println("toUrlsWithEmpty urls: "+urls);
+
         return urls;
     }
 

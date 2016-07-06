@@ -355,6 +355,11 @@ public class UrlUtils {
     public static boolean isMatch(URL consumerUrl, URL providerUrl) {
         String consumerInterface = consumerUrl.getServiceInterface();
         String providerInterface = providerUrl.getServiceInterface();
+        if (providerInterface.indexOf("$")>0)//兼容thrift接口，否则统计不显示provider
+        {
+        	providerInterface = URL.encode(providerInterface);
+        }
+        
         if( ! (Constants.ANY_VALUE.equals(consumerInterface) || StringUtils.isEquals(consumerInterface, providerInterface)) ) return false;
         
         if (! isMatchCategory(providerUrl.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY), 
