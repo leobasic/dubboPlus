@@ -7,6 +7,11 @@
 
 # 版本历史
 
+###r1.0.1
+* 修复：thrift暴露的服务在zookeeper无限生成节点
+* 完善：禁止非thrift服务在thrift协议和dubbo thrift协议进行服务暴露  	
+* 修复：thrift协议服务不在监控系统中显示提供者和消费者
+
 ###r1.0.0
 * 支持thrift原生协议(thrift 0.8.0)
 * 修复dubbo thrift协议下，不能使用telnet命令    	
