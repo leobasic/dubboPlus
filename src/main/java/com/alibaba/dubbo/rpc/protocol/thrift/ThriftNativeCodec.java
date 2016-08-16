@@ -413,24 +413,26 @@ public class ThriftNativeCodec implements Codec2 {
 
 		} else {// thrift规定动作
 			Object realResult = result.getValue();
-			// result field id is 0
-			String fieldName = resultObj.fieldForId(0).getFieldName();
-			String setMethodName = ThriftUtils.generateSetMethodName(fieldName);
-			String getMethodName = ThriftUtils.generateGetMethodName(fieldName);
-			Method getMethod;
-			Method setMethod;
-			try {
-				getMethod = clazz.getMethod(getMethodName);
-				setMethod = clazz.getMethod(setMethodName, getMethod.getReturnType());
-				setMethod.invoke(resultObj, realResult);
-			} catch (NoSuchMethodException e) {
-				throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
-			} catch (InvocationTargetException e) {
-				throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
-			} catch (IllegalAccessException e) {
-				throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+			if (realResult!=null)//有返回值的方法，需要设置返回值
+			{
+				// result field id is 0
+				String fieldName = resultObj.fieldForId(0).getFieldName();
+				String setMethodName = ThriftUtils.generateSetMethodName(fieldName);
+				String getMethodName = ThriftUtils.generateGetMethodName(fieldName);
+				Method getMethod;
+				Method setMethod;
+				try {
+					getMethod = clazz.getMethod(getMethodName);
+					setMethod = clazz.getMethod(setMethodName, getMethod.getReturnType());
+					setMethod.invoke(resultObj, realResult);
+				} catch (NoSuchMethodException e) {
+					throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+				} catch (InvocationTargetException e) {
+					throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+				} catch (IllegalAccessException e) {
+					throw new RpcException(RpcException.SERIALIZATION_EXCEPTION, e.getMessage(), e);
+				}
 			}
-
 		}
 
 		if (applicationException != null|| ((RpcResult)response.getResult()).hasException() ) {
@@ -474,10 +476,10 @@ public class ThriftNativeCodec implements Codec2 {
 	
 	
 	static class RequestData {
-		long id;
+		long id;//内部id
 		String serviceName;
 		String methodName;
-		int thrift_seq_id;
+		int thrift_seq_id;//thrift req  id
 
 		static RequestData create(long id, String sn, String mn,int thrift_seq_id) {
 			RequestData result = new RequestData();

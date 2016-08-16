@@ -14,7 +14,6 @@
 package com.alibaba.dubbo.rpc.protocol.thrift;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -40,8 +39,11 @@ import com.alibaba.dubbo.rpc.protocol.AbstractProtocol;
 import com.alibaba.dubbo.rpc.protocol.dubbo.DubboExporter;
 
 /**
- * @author <a href="mailto:gang.lvg@alibaba-inc.com">gang.lvg</a>
+ * 
+* @author <a href="mailto:xpbasic@126.com">echo.zhao</a>
+* @date 2016年8月15日 下午7:27:21
  */
+
 public class ThriftProtocol extends AbstractProtocol {
 
     public static final int DEFAULT_PORT = 40880;
